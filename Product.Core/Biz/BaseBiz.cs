@@ -13,8 +13,8 @@ using Product.Core.Module;
 namespace Product.Core.Biz
 {
     public class BaseBiz<TEntity, TDTO>
-        where TEntity : StrongEntity
-        where TDTO : StrongEntityDTO
+        where TEntity : BaseEntity
+        where TDTO : BaseEntityDTO
     {
         const string DtoPostfix = "DTO";
 
@@ -88,16 +88,7 @@ namespace Product.Core.Biz
             {
                 UnitOfWork.Commit();
 
-                if (entity is StrongEntity)
-                {
-                    StrongEntityDTO strongDto = newDto as StrongEntityDTO;
-                    if (strongDto != null)
-                    {
-                        strongDto.Id = (entity as StrongEntity).Id;
-                    }
-                }
             }
-
         }
 
         public virtual TDTO InsertAndReturn(TDTO newDto)
@@ -161,7 +152,7 @@ namespace Product.Core.Biz
         }
 
         protected IQueryable<R> Get<R>(Expression<Func<R, bool>> filter = null)
-        where R : StrongEntity
+        where R : BaseEntity
         {
             return UnitOfWork.Repository<R>().Get(filter);
         }

@@ -6,10 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Product.Core.Contracts.Entities;
 
-namespace Product.Core.Contracts.DTOs
+namespace Product.Core.Contracts.Entities
 {
-	public abstract class  StrongEntityDTO : BaseEntityDTO
+    public abstract class BaseEntity
     {
-        public int Id { get; set; }
-	}
+        public int? CreatorId { get; set; }
+        public bool IsDelete { get; set; }
+    }
+
 }

@@ -35,7 +35,7 @@ namespace Product.Core.Module
         }
         public static PaginatedResult<TDTO> ToDTOPaginatedResult<TEntity, TDTO>(this IOrderedQueryable<TEntity> query,
             PaginatedRequest request)
-            where TEntity : StrongEntity
+            where TEntity : BaseEntity
             where TDTO : class // not important to be BaseDTO
         {
 
@@ -54,10 +54,10 @@ namespace Product.Core.Module
 
         public static PaginatedResult<TDTO> ToDTOPaginatedResult<TEntity, TDTO>(this IQueryable<TEntity> query,
             PaginatedRequest request)
-            where TEntity : StrongEntity
+            where TEntity : BaseEntity
             where TDTO : class
         {
-            query = query.OrderByDescending(x => x.Id);
+            query = query.OrderByDescending(x => x.CreatorId);
             var projectQuery = query.ProjectTo<TDTO>(Mapper.ConfigurationProvider);
             var dsResult = projectQuery.Skip(request.Skip).Take(request.Take).AsNoTracking().ToList();
             var toReturn = new PaginatedResult<TDTO>
@@ -73,7 +73,7 @@ namespace Product.Core.Module
 
         #region Mapping Extensions
 
-        public static TDTO ToDTO<TDTO>(this StrongEntity entity)
+        public static TDTO ToDTO<TDTO>(this BaseEntity entity)
             where TDTO : class
         {
             if (entity == null)
@@ -81,15 +81,15 @@ namespace Product.Core.Module
             return Mapper.Map<TDTO>(entity);
         }
 
-        public static TEntity ToEntity<TEntity>(this StrongEntityDTO dto)
-            where TEntity : StrongEntity
+        public static TEntity ToEntity<TEntity>(this BaseEntityDTO dto)
+            where TEntity : BaseEntity
         {
             if (dto == null)
                 return default(TEntity);
             return Mapper.Map<TEntity>(dto);
         }
 
-        public static List<TDTO> ToDTOList<TDTO>(this IQueryable<StrongEntity> entityList)
+        public static List<TDTO> ToDTOList<TDTO>(this IQueryable<BaseEntity> entityList)
             where TDTO : class
         {
             if (entityList == null)
@@ -97,8 +97,8 @@ namespace Product.Core.Module
             return entityList.ProjectTo<TDTO>(Mapper.ConfigurationProvider).ToList();
         }
 
-        public static List<TEntity> ToEntityList<TEntity>(this IEnumerable<StrongEntityDTO> dtoList)
-            where TEntity : StrongEntity
+        public static List<TEntity> ToEntityList<TEntity>(this IEnumerable<BaseEntityDTO> dtoList)
+            where TEntity : BaseEntity
         {
             if (dtoList == null)
                 return null;

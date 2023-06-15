@@ -48,7 +48,7 @@ namespace Product.Core.DataAccess
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public virtual IRepository<T> Repository<T>() where T : StrongEntity
+        public virtual IRepository<T> Repository<T>() where T : BaseEntity
         {
             try
             {

@@ -8,7 +8,7 @@ using Product.Core.Contracts.Entities;
 
 namespace Product.Core.DataAccess
 {
-	public interface IRepository<T> where T : StrongEntity
+	public interface IRepository<T> where T : BaseEntity
 	{
 		T GetByPK(params object[] keyValues);
 		void Insert(T newEntity);

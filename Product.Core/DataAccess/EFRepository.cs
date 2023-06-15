@@ -12,7 +12,7 @@ using Product.Core.Module;
 
 namespace Product.Core.DataAccess
 {
-    public class EFRepository<T> : IRepository<T> where T : StrongEntity
+    public class EFRepository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly DbContext _context;
         protected DbSet<T> Entities { get; private set; }
@@ -104,7 +104,7 @@ namespace Product.Core.DataAccess
             //{
             //    query = query.Where(x => x.TenantId == _currentUser.TenantId);
             //}
-            var dsResult = query.OrderByDescending(x => x.Id).ToPaginatedResult(request);
+            var dsResult = query.OrderByDescending(x => x.CreatorId).ToPaginatedResult(request);
             return dsResult;
         }
 
