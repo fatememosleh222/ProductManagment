@@ -12,7 +12,7 @@ using Product.Domain;
 namespace Product.Domain.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20230615092422_init")]
+    [Migration("20230615103803_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -27,14 +27,11 @@ namespace Product.Domain.Migrations
 
             modelBuilder.Entity("Product.Domain.Common.Products", b =>
                 {
-                    b.Property<DateTime>("ProduceDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnOrder(0);
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("ManufactureEmail")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnOrder(1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("CreatorId")
                         .HasColumnType("int");
@@ -44,6 +41,11 @@ namespace Product.Domain.Migrations
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ManufactureEmail")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ManufacturePhone")
                         .IsRequired()
@@ -55,7 +57,13 @@ namespace Product.Domain.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.HasKey("ProduceDate", "ManufactureEmail");
+                    b.Property<DateTime>("ProduceDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProduceDate", "ManufactureEmail")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });

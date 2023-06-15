@@ -24,7 +24,5 @@ namespace Product.Core.Biz
 	    //R BulkAction<R>(Func<R> func, bool transactional, out string errorMessage);
         PaginatedResult<TDTO> GetAllPaginated(PaginatedRequest param);
 
-
-	    bool IsDuplicate(TDTO dto);
 	}
 }

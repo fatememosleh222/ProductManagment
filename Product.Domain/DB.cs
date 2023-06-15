@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -28,8 +29,8 @@ namespace Product.Domain
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
-            builder.Entity<Products>().HasKey(x => new { x.ProduceDate, x.ManufactureEmail });
+            builder.Entity<Products>()
+             .HasIndex(p => new { p.ProduceDate, p.ManufactureEmail }).IsUnique();
 
         }
     }

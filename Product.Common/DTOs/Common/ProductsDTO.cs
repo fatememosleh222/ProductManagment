@@ -1,29 +1,25 @@
-﻿using Product.Core.Contracts.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
-using System.Threading.Tasks;
+using Product.Core.Contracts.Entities;
+using Product.Core.Contracts.DTOs;
 
-namespace Product.Domain.Common
+namespace Product.Common.DTOs.Common
 {
-    public class Products : BaseEntity
+    public class ProductsDTO : BaseEntityDTO
     {
-        [StringLength(300)]
+        public int Id { get; set; }
+
+        [Required]
         public string Name { get; set; }
 
-        [Key, Column(Order = 0)]
         public DateTime ProduceDate { get; set; }
 
-        [StringLength(50)]
-        [Key, Column(Order = 1)]
         [Required, EmailAddress]
         public string ManufactureEmail { get; set; }
 
-
-        [StringLength(11)]
         public string ManufacturePhone { get; set; }
 
         public bool IsAvailable { get; set; }

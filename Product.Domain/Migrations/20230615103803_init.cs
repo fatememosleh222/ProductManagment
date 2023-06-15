@@ -15,9 +15,11 @@ namespace Product.Domain.Migrations
                 name: "Products",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     ProduceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ManufactureEmail = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     ManufacturePhone = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
                     IsAvailable = table.Column<bool>(type: "bit", nullable: false),
                     CreatorId = table.Column<int>(type: "int", nullable: true),
@@ -25,7 +27,7 @@ namespace Product.Domain.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => new { x.ProduceDate, x.ManufactureEmail });
+                    table.PrimaryKey("PK_Products", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,6 +45,12 @@ namespace Product.Domain.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_ProduceDate_ManufactureEmail",
+                table: "Products",
+                columns: new[] { "ProduceDate", "ManufactureEmail" },
+                unique: true);
         }
 
         /// <inheritdoc />

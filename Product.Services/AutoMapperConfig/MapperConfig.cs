@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using Product.Common.DTOs.Common;
+using Product.Common.DTOs.Security;
+using Product.Domain.Common;
+using Product.Domain.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +15,8 @@ namespace Product.Services.AutoMapperConfig
     {
         public MapperConfig()
         {
-            //CreateMap<UserDTO, User>().ReverseMap();
+            CreateMap<UserDTO, User>().ReverseMap();
+            CreateMap<ProductsDTO, Products>().ReverseMap();
 
         }
     }

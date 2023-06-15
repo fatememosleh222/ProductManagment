@@ -9,6 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Product.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Product.Services.Contracts.Common;
+using Product.Core.DataAccess;
+using Product.Services.Modules.Common;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -21,8 +25,20 @@ services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
+services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            /*.AllowCredentials()*/);
+});
+
+
+
+
 services.AddAutoMapper(typeof(MapperConfig).Assembly);
-Extensions.Mapper = services.BuildServiceProvider().GetService<IMapper>();
 
 
 var conStr = MyConfig.GetConnectionString("dbconn");
@@ -31,17 +47,27 @@ services.AddDbContext<DB>(options => options
 .UseSqlServer(conStr));
 services.AddScoped<DbContext, DB>();
 
-//var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Secret").Value);
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-//{
-//    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-//    {
-//        ValidateIssuerSigningKey = true,
-//        IssuerSigningKey = new SymmetricSecurityKey(key),
-//        ValidateIssuer = false,
-//        ValidateAudience = false
-//    };
-//});
+Extensions.Mapper = services.BuildServiceProvider().GetService<IMapper>();
+Extensions.ConnStr = conStr;
+
+var key = Encoding.ASCII.GetBytes(MyConfig.GetSection("AppSettings:Secret").Value);
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
+services.AddHttpContextAccessor();
+services.AddScoped<CurrentUser>();
+services.AddScoped<IUnitOfWork, UnitOfWork>();
+services.AddScoped<IProductBiz, ProductBiz>();
+
+
 
 var app = builder.Build();
 
@@ -59,10 +85,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+
+
+
+
+
+app.UseStaticFiles();
+
+app.UseCors("CorsPolicy");
+
+//app.UseMiddleware(typeof(SecureDownloadUrlsMiddleware));
+
+app.UseRouting();
+app.UseAuthentication();
