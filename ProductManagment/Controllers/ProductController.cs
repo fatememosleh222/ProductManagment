@@ -8,7 +8,7 @@ namespace ProductManagment.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    internal class ProductController : BaseApiController
+    public class ProductController : BaseApiController
     {
         private IProductBiz _productBiz;
         public ProductController(IProductBiz productBiz)
@@ -16,40 +16,46 @@ namespace ProductManagment.Controllers
             _productBiz = productBiz;
         }
 
-        [HttpPost]
+      //  [HttpPost]
+        [HttpPost(Name = "Create")]
         [OpenApiOperation("Create", "Create Product ", "")]
         public IActionResult Create(ProductsDTO data)
         {
             var succeed = _productBiz.Insert(data, out var errorMessage);
 
-            return Okk(succeed, errorMessage);
+             return Okk(succeed, errorMessage);
+            //return Okk();
         }
 
-        [HttpPost]
+        [HttpPost(Name = "Update")]
         [OpenApiOperation("Update", "Update Product ", "")]
         public IActionResult Update(ProductsDTO data)
         {
             var succeed = _productBiz.Update(data, out var errorMessage);
 
             return Okk(succeed, errorMessage);
+            //return Ok(succeed);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "Delete")]
         [OpenApiOperation("Delete", "Delete Product ", "")]
         public IActionResult Delete(ProductsDTO data)
         {
             _productBiz.Delete(data);
-            return Okk();
+             return Okk();
+            //return Ok(true);
         }
 
 
 
-        [HttpGet]
+        
+        [HttpGet(Name = "GetProductList")]
         [AllowAnonymous]
         [OpenApiOperation("GetProductList", "Get Product List","")]
         public IActionResult GetProductList()
         {
             return Okk(true, " ", _productBiz.GetList());
+            //return Ok(new BaseResponse(true));
 
         }
     }

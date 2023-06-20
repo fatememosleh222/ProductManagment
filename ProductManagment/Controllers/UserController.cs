@@ -12,21 +12,24 @@ using System.Text;
 
 namespace ProductManagment.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
-    internal class UserController : BaseApiController
+    public class UserController : BaseApiController
     {
         private readonly IConfiguration _config;
         private IUserBiz _userBiz;
-        public UserController(IConfiguration config, IUserBiz userBiz)
+        private readonly ILogger<UserController> _logger;
+        public UserController(IConfiguration config, IUserBiz userBiz, ILogger<UserController> logger)
         {
             _config = config;
             _userBiz = userBiz;
+            _logger = logger;   
         }
 
 
         [HttpPost(Name = "Login")]
         [AllowAnonymous]
+
         public IActionResult Login()
         {
             var result = _userBiz.Login();
@@ -35,7 +38,7 @@ namespace ProductManagment.Controllers
             return GetToken(result.Item1, result.Item2);
         }
 
-
+        [HttpPost(Name = "GetToken")]
         private IActionResult GetToken(UserDTO user, List<Claim> claims)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
