@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Product.Common.DTOs.Common
 {
+    /*Base class for responses this class is generally used in all projects*/
     public class BaseResponse
     {
         public BaseResponse()
